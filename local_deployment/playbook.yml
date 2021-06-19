@@ -1,0 +1,44 @@
+- name: Setup hermes on Vargrant VM
+  hosts: Servers
+  become: yes
+  pre_tasks:
+  - name: Update apt packages
+    apt:
+      update_cache: yes
+  tasks:
+  - name: Install docker && docker-compose
+    vars:
+      docker_service_state: started
+      docker_service_enabled: true
+      docker_install_compose: true
+      docker_compose_path: /usr/local/bin/docker-compose
+    # See https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html#including-roles-dynamic-reuse
+    include_role:
+      name: geerlingguy.docker
+  - name: Deploy app
+    block:
+    - name: Create hermes directory
+      file:
+        path: /usr/src/hermes
+        state: directory
+        mode: '0755'
+    - name: Create nginx conf directory
+      file:
+        path: /usr/src/hermes/nginx
+        state: directory
+        mode: '0755'
+    - name: Copy docker-compose file from host to vm
+      copy:
+        src: files/docker-compose.yml
+        dest: /usr/src/hermes
+        mode: '0644'
+    - name: Copy nginx file from host to vm
+      copy:
+        src: files/nginx/default.conf
+        dest: /usr/src/hermes/nginx/default.conf
+        mode: '0644'
+    - name: Run docker-compose
+      command: docker-compose up -d
+      args:
+        chdir: /usr/src/hermes
+      changed_when: true

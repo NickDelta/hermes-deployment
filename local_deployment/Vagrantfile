@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "hashicorp/bionic64"
+    config.vm.hostname = "vagrantstation"
+    config.vm.network :public_network, ip: "192.168.1.69" # Change the IP if you are on a different subnet
+    
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 4096
+      v.cpus = 4
+    end
+    
+    config.vm.provision "shell" do |s|
+        ssh_pub_key = File.readlines(File.join(Dir.home, ".ssh/id_rsa.pub")).first.strip
+        s.inline = <<-SHELL
+          echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+        SHELL
+      end
+end
