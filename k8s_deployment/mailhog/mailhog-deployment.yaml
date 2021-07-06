@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mailhog
+  name: mailhog
+  namespace: hermes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailhog
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: mailhog
+    spec:
+      containers:
+        - image: mailhog/mailhog:v1.0.1
+          name: hermes-mailhog
+          ports:
+            - containerPort: 1025
+            - containerPort: 8025
+          resources: {}
+      restartPolicy: Always
+status: {}

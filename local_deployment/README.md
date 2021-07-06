@@ -1,4 +1,3 @@
-
 # Hermes Local Deployment Instructions
 
 ## Tools used:
@@ -56,10 +55,6 @@ You may then access these apps locally:
 - External Front-End -> http://internal.hermes.local
 - Keycloak -> http://sso.hermes.local
 - Mailhog (Mock Mail Server) -> http://mailhog.hermes.local
-
-## Architectural Diagram
-
-TODO
 
 ## Delete the VM
 
